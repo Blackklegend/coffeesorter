@@ -1,5 +1,9 @@
-import adapter from '@sveltejs/adapter-node';
+import adapterNode from '@sveltejs/adapter-node';
+import adapterVercel from '@sveltejs/adapter-vercel'
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+const isRender = process.env.RENDER === 'true';
+const isVercel = process.env.VERCEL === '1'; // Vercel sets VERCEL=1 by default
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,7 +12,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter()
+		adapter: isVercel ? adapterVercel() : adapterNode()
 	}
 };
 
