@@ -35,11 +35,11 @@
 		{/if}
 
 		<div class="flex gap-2 justify-center mt-4">
-			<button class="bg-green-400 hover:bg-green-700 rounded-2xl px-3 py-2 text-white font-bold" on:click={sortearPessoa}>
+			<button class="bg-green-400 hover:bg-green-700 rounded-2xl px-3 py-2 text-white font-bold cursor-pointer" on:click={sortearPessoa}>
 				{selected ? 'Novo Sorteio' : 'Sortear'}
 			</button>
 			{#if selected}
-				<button class="bg-blue-400 hover:bg-blue-600 rounded-2xl px-3 py-2 text-white font-bold" on:click={() => {selected=undefined; showConfetti=false}}>
+				<button class="bg-blue-400 hover:bg-blue-600 rounded-2xl px-3 py-2 text-white font-bold cursor-pointer" on:click={() => {selected=undefined; showConfetti=false}}>
 					Limpar
 				</button>
 			{/if}
