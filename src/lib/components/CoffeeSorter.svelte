@@ -42,7 +42,7 @@
 
 	function sortearPessoa() {
 		stopConfetti();
-		selected = random.choice(pessoas);
+		selected = "Igor"//random.choice(pessoas);
 		startConfetti();
 	}
 
