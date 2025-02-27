@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import random from 'random'
 
     type Particle = {
         x: number;
@@ -15,7 +16,7 @@
 
 	let confettiContext;
 	let confettiAnimationId: number | undefined;
-	let selected: string | null = null;
+	let selected: string | undefined;
 	const particles: Particle[] = [];
 
 	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte'];
@@ -41,7 +42,7 @@
 
 	function sortearPessoa() {
 		stopConfetti();
-		selected = pessoas[Math.floor(Math.random() * pessoas.length)];
+		selected = random.choice(pessoas);
 		startConfetti();
 	}
 
