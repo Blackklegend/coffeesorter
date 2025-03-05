@@ -1,48 +1,181 @@
 <script lang="ts">
 	import random from 'random';
 	import Confetti from './Confetti.svelte';
-	import { fade } from 'svelte/transition';
-	import { flip } from 'svelte/animate';
+	import { fade, fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+
+	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte'];
+	const SPIN_DURATION = 2000;
+	const SPIN_INTERVAL = 100; // Faster updates for smoother animation
+	const ROTATIONS = 2; // Number of full rotations before stopping
+
+	$: currentSpinIndex = 0;
+	$: rotationState = 0;
+	$: spinningNames = [
+		pessoas[currentSpinIndex % pessoas.length],
+		pessoas[(currentSpinIndex + 1) % pessoas.length],
+		pessoas[(currentSpinIndex + 2) % pessoas.length],
+		pessoas[(currentSpinIndex + 3) % pessoas.length]
+	];
 
 	let selected: string | undefined;
 	let showConfetti = false;
+	let spinning = false;
+	let spinInterval: number;
 
-	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte'];
+	function startSpinning() {
+		spinning = true;
+		rotationState = 0;
+		spinInterval = setInterval(() => {
+			currentSpinIndex++;
+			rotationState = currentSpinIndex * 90 + ROTATIONS * 360;
+		}, SPIN_INTERVAL);
+	}
 
 	function sortearPessoa() {
 		showConfetti = false;
-		selected = random.choice(pessoas);
-		showConfetti = true;
+		const newPerson = random.choice(pessoas.filter((p) => p !== selected));
+		const targetIndex = pessoas.indexOf(newPerson!);
+		currentSpinIndex = pessoas.length - targetIndex;
+		startSpinning();
+
+		setTimeout(() => {
+			clearInterval(spinInterval);
+			spinning = false;
+			selected = newPerson;
+			showConfetti = true;
+		}, SPIN_DURATION);
 	}
 </script>
 
-<div class="relative w-full h-full flex justify-center items-center min-h-[400px]">
+<div class="relative flex h-full min-h-[400px] w-full items-center justify-center">
 	<Confetti active={showConfetti} />
 
-	<div class="bg-white p-8 rounded-lg text-center shadow-lg">
-		<h2 class="mt-0 text-2xl font-bold text-gray-800 mb-4">Sorteio do Café</h2>
+	<div class="w-2/4 rounded-lg bg-white p-8 text-center shadow-lg" in:fade={{ duration: 400 }}>
+		<h2 class="mt-0 mb-4 text-2xl font-bold text-gray-800">Sorteio do Café</h2>
 
-		{#if selected}
-			{#each [selected] as person (person)}
-				<p class="text-lg my-4" 
-					in:fade={{ duration: 400 }}
-				>
-					Parabéns, você foi sorteado para fazer café: ✨ {person} ✨
-				</p>
-			{/each}
+		{#if selected || spinning}
+			<div class="flex flex-col items-center" in:fly={{ y: 20, duration: 400, easing: quintOut }}>
+				<div>
+					<p class="my-4 text-lg">Parabéns, você foi sorteado para fazer café:</p>
+				</div>
+				<div class="w-full mb-4">
+					<div class="cube-container">
+						<div
+							class="cube"
+							class:spinning
+							class:flipped={showConfetti}
+							style="--rotation-state: {rotationState}"
+						>
+							{#each spinningNames as name, i}
+								<div
+									class="cube-face {i === 0
+										? 'front'
+										: i === 1
+											? 'back'
+											: i === 2
+												? 'top'
+												: 'bottom'}"
+								>
+									<p class="text-lg font-bold text-green-600">
+										✨ {name} ✨
+									</p>
+								</div>
+							{/each}
+						</div>
+					</div>
+				</div>
+			</div>
 		{:else}
-			<p in:fade={{ duration: 400 }} class="text-gray-600 text-lg">Clique no botão para sortear quem vai fazer o café</p>
+			<p in:fade={{ duration: 400 }} class="text-lg text-gray-600">
+				Clique no botão para sortear quem vai fazer o café
+			</p>
 		{/if}
 
-		<div class="flex gap-2 justify-center mt-4">
-			<button class="bg-green-400 hover:bg-green-700 rounded-2xl px-3 py-2 text-white font-bold cursor-pointer" on:click={sortearPessoa}>
+		<div class="mt-4 flex justify-center gap-2">
+			<button
+				class="cursor-pointer rounded-2xl bg-green-400 px-3 py-2 font-bold text-white hover:bg-green-700 disabled:opacity-50"
+				on:click={sortearPessoa}
+				disabled={spinning}
+			>
 				{selected ? 'Novo Sorteio' : 'Sortear'}
 			</button>
+
 			{#if selected}
-				<button class="bg-blue-400 hover:bg-blue-600 rounded-2xl px-3 py-2 text-white font-bold cursor-pointer" on:click={() => {selected=undefined; showConfetti=false}}>
+				<button
+					class="cursor-pointer rounded-2xl bg-blue-400 px-3 py-2 font-bold text-white hover:bg-blue-600"
+					on:click={() => {
+						selected = undefined;
+						showConfetti = false;
+					}}
+				>
 					Limpar
 				</button>
 			{/if}
 		</div>
 	</div>
 </div>
+
+<style>
+	.cube-container {
+		width: 100%;
+		height: 80px;
+		perspective: 1000px;
+		margin: 0 auto;
+	}
+
+	.cube {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		transform-style: preserve-3d;
+		transform: translateZ(-50px);
+		transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.cube.spinning {
+		transform: translateZ(-50px) rotateX(calc(-1deg * var(--rotation-state)));
+	}
+
+	.cube-face {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		backface-visibility: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: white;
+		border-radius: 8px;
+	}
+
+	.cube-face.front {
+		transform: rotateX(0deg) translateZ(50px);
+	}
+
+	.cube-face.back {
+		transform: rotateX(180deg) translateZ(50px);
+	}
+
+	.cube-face.top {
+		transform: rotateX(90deg) translateZ(50px);
+	}
+
+	.cube-face.bottom {
+		transform: rotateX(-90deg) translateZ(50px);
+	}
+
+	@keyframes spinCube {
+		0% {
+			transform: translateZ(-50px) rotateX(0deg);
+		}
+		100% {
+			transform: translateZ(-50px) rotateX(-360deg);
+		}
+	}
+
+	.cube.flipped {
+		animation: none;
+		transform: translateZ(-50px) rotateX(180deg);
+	}
+</style>
