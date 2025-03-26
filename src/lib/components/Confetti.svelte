@@ -94,4 +94,4 @@
 	});
 </script>
 
-<canvas bind:this={canvas} class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+<canvas bind:this={canvas} class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>

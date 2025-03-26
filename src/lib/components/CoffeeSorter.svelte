@@ -5,9 +5,9 @@
 	import { quintOut } from 'svelte/easing';
 
 	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte'];
-	const SPIN_DURATION = 2000;
-	const SPIN_INTERVAL = 100; // Faster updates for smoother animation
-	const ROTATIONS = 2; // Number of full rotations before stopping
+	const SPIN_DURATION = 1500;
+	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
+	const ROTATIONS = 12; // Number of full rotations before stopping
 
 	$: currentSpinIndex = 0;
 	$: rotationState = 0;
