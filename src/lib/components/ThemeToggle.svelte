@@ -30,9 +30,9 @@
 
 <button on:click={toggleTheme} aria-label="Toggle theme" class="z-10 relative">
     {#if isDark}
-        <span class="absolute right-2" transition:fade>{isDark ? '🌙' : '☀️'}</span>
+        <span class="absolute right-2" transition:fade>{isDark ? '🥛 ' : '☕'}</span>
     {:else}
-        <span class="absolute right-2" transition:fade>{isDark ? '🌙' : '☀️'}</span>
+        <span class="absolute right-2" transition:fade>{isDark ? '🥛 ' : '☕'}</span>
     {/if}
 </button>
 
