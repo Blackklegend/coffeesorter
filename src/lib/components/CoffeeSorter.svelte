@@ -19,7 +19,7 @@
 	];
 
 	let selected: string | undefined;
-	let showConfetti = false;
+	export let showConfetti = false;
 	let spinning = false;
 	let spinInterval: number;
 
@@ -51,8 +51,8 @@
 <div class="relative flex h-full min-h-[400px] w-full items-center justify-center">
 	<Confetti active={showConfetti} />
 
-	<div class="w-2/4 rounded-lg bg-white p-8 text-center shadow-lg" in:fade={{ duration: 400 }}>
-		<h2 class="mt-0 mb-4 text-2xl font-bold text-gray-800">Sorteio do Café</h2>
+	<div class="coffee-sorter-card w-2/4 rounded-lg p-8 text-center shadow-lg dark:shadow-gray-800" in:fade={{ duration: 400 }}>
+		<h2 class="mt-0 mb-4 text-2xl font-bold">Sorteio do Café</h2>
 
 		{#if selected || spinning}
 			<div class="flex flex-col items-center" in:fly={{ y: 20, duration: 400, easing: quintOut }}>
@@ -77,7 +77,7 @@
 												? 'top'
 												: 'bottom'}"
 								>
-									<p class="text-lg font-bold text-green-600">
+									<p class="text-lg font-bold winner-text">
 										✨ {name} ✨
 									</p>
 								</div>
@@ -87,36 +87,60 @@
 				</div>
 			</div>
 		{:else}
-			<p in:fade={{ duration: 400 }} class="text-lg text-gray-600">
+			<p in:fade={{ duration: 400 }} class="text-lg">
 				Clique no botão para sortear quem vai fazer o café
 			</p>
 		{/if}
 
-		<div class="mt-4 flex justify-center gap-2">
-			<button
-				class="cursor-pointer rounded-2xl bg-green-400 px-3 py-2 font-bold text-white hover:bg-green-700 disabled:opacity-50"
-				on:click={sortearPessoa}
-				disabled={spinning}
-			>
-				{selected ? 'Novo Sorteio' : 'Sortear'}
-			</button>
-
-			{#if selected}
+		{#if !spinning}
+			<div class="mt-4 flex justify-center gap-2">
 				<button
-					class="cursor-pointer rounded-2xl bg-blue-400 px-3 py-2 font-bold text-white hover:bg-blue-600"
-					on:click={() => {
-						selected = undefined;
-						showConfetti = false;
-					}}
+					class="primary-button cursor-pointer rounded-2xl px-3 py-2 font-bold disabled:opacity-50"
+					on:click={sortearPessoa}
+					disabled={spinning}
 				>
-					Limpar
+					{selected ? 'Novo Sorteio' : 'Sortear'}
 				</button>
-			{/if}
-		</div>
+
+				{#if selected}
+					<button
+						class="secondary-button cursor-pointer rounded-2xl px-3 py-2 font-bold"
+						on:click={() => {
+							selected = undefined;
+							showConfetti = false;
+						}}
+					>
+						Limpar
+					</button>
+				{/if}
+			</div>
+		{/if}
 	</div>
 </div>
 
 <style>
+	.primary-button {
+		background-color: #4ade80;
+		color: white;
+	}
+
+	.primary-button:hover {
+		background-color: #16a34a;
+	}
+
+	.secondary-button {
+		background-color: #60a5fa;
+		color: white;
+	}
+
+	.secondary-button:hover {
+		background-color: #2563eb;
+	}
+
+	.winner-text {
+		color: #16a34a;
+	}
+
 	.cube-container {
 		width: 100%;
 		height: 80px;
@@ -145,7 +169,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: white;
+		background: var(--background);
 		border-radius: 8px;
 	}
 
