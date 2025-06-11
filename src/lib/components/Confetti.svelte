@@ -80,14 +80,16 @@
 		confettiAnimationId = requestAnimationFrame(animateConfetti);
 	}
 
-	function stopConfetti() {
-		if (confettiAnimationId) {
-			cancelAnimationFrame(confettiAnimationId);
-			confettiAnimationId = undefined;
-            confettiContext!.clearRect(0, 0, canvas.width, canvas.height);
-		}
-		particles.length = 0;
-	}
+        function stopConfetti() {
+                if (confettiAnimationId) {
+                        cancelAnimationFrame(confettiAnimationId);
+                        confettiAnimationId = undefined;
+                }
+                if (confettiContext && canvas) {
+                        confettiContext.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                particles.length = 0;
+        }
 
 	onDestroy(() => {
 		stopConfetti();
