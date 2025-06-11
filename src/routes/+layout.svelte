@@ -1,17 +1,25 @@
 <script lang="ts">
-	import '../app.css';
-	let { children } = $props();
-	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-	import Confetti from '$lib/components/Confetti.svelte';
+        import '../app.css';
+        let { children, data } = $props();
+        import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+        import Confetti from '$lib/components/Confetti.svelte';
 
-	let showConfetti = false;
+        let showConfetti = false;
 </script>
 
 <div class="layout">
 	<Confetti active={showConfetti} />
-	<nav class="absolute w-full">
-		<ThemeToggle />
-	</nav>
+        <nav class="absolute w-full flex justify-end gap-4">
+                <ThemeToggle />
+                {#if data.user}
+                        <form method="POST" action="/api/auth/logout">
+                                <button>Logout ({data.user})</button>
+                        </form>
+                {:else}
+                        <a href="/login">Login</a>
+                        <a href="/signup">Sign up</a>
+                {/if}
+        </nav>
 	{@render children()}
 </div>
 
