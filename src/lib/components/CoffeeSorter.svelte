@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte'];
+	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte', 'Leo'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
