@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Monte', 'Leo'];
+	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Leo', 'Monte'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
@@ -34,7 +34,26 @@
 
 	function sortearPessoa() {
 		showConfetti = false;
-		const newPerson = random.choice(pessoas.filter((p) => p !== selected));
+		// Define weights for each person (must match pessoas order)
+		const weights = [0.3, 0.2, 0.8, 0.9, 0.5]; // Example: Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5
+		const filteredPessoas = pessoas.filter((p) => p !== selected);
+		const filteredWeights = pessoas
+			.map((p, i) => ({ p, w: weights[i] }))
+			.filter(({ p }) => p !== selected)
+			.map(({ w }) => w);
+
+		// Weighted random choice
+		function weightedChoice(arr: string[], weights: number[]) {
+			const total = weights.reduce((a, b) => a + b, 0);
+			let r = random.float(0, total);
+			for (let i = 0; i < arr.length; i++) {
+				if (r < weights[i]) return arr[i];
+				r -= weights[i];
+			}
+			return arr[arr.length - 1];
+		}
+
+		const newPerson = weightedChoice(filteredPessoas, filteredWeights);
 		const targetIndex = pessoas.indexOf(newPerson!);
 		currentSpinIndex = pessoas.length - targetIndex;
 		startSpinning();
