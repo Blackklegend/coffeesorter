@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ cookies }) => {
-  cookies.delete('session', { path: '/' });
-  return new Response('ok');
+	cookies.delete('session', { path: '/' });
+	return new Response('ok');
 };

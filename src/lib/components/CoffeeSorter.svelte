@@ -9,8 +9,8 @@
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
 
-	$: currentSpinIndex = 0;
-	$: rotationState = 0;
+	let currentSpinIndex = 0;
+	let rotationState = 0;
 	$: spinningNames = [
 		pessoas[currentSpinIndex % pessoas.length],
 		pessoas[(currentSpinIndex + 1) % pessoas.length],
@@ -51,7 +51,10 @@
 <div class="relative flex h-full min-h-[400px] w-full items-center justify-center">
 	<Confetti active={showConfetti} />
 
-	<div class="coffee-sorter-card w-2/4 rounded-lg p-8 text-center shadow-lg dark:shadow-gray-800" in:fade={{ duration: 400 }}>
+	<div
+		class="coffee-sorter-card w-2/4 rounded-lg p-8 text-center shadow-lg dark:shadow-gray-800"
+		in:fade={{ duration: 400 }}
+	>
 		<h2 class="mt-0 mb-4 text-2xl font-bold">Sorteio do Café</h2>
 
 		{#if selected || spinning}
@@ -59,7 +62,7 @@
 				<div>
 					<p class="my-4 text-lg">Parabéns, você foi sorteado para fazer café:</p>
 				</div>
-				<div class="w-full mb-4">
+				<div class="mb-4 w-full">
 					<div class="cube-container">
 						<div
 							class="cube"
@@ -67,7 +70,7 @@
 							class:flipped={showConfetti}
 							style="--rotation-state: {rotationState}"
 						>
-							{#each spinningNames as name, i}
+							{#each spinningNames as name, i (name)}
 								<div
 									class="cube-face {i === 0
 										? 'front'
@@ -77,7 +80,7 @@
 												? 'top'
 												: 'bottom'}"
 								>
-									<p class="text-lg font-bold winner-text">
+									<p class="winner-text text-lg font-bold">
 										✨ {name} ✨
 									</p>
 								</div>
