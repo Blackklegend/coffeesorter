@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Leo', 'Monte'];
+	const pessoas = ['Tinho', 'Bansen', 'Igor', 'Leo', 'Monte', 'Guilherme'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
@@ -35,7 +35,7 @@
 	function sortearPessoa() {
 		showConfetti = false;
 		// Define weights for each person (must match pessoas order)
-		const weights = [0.3, 0.2, 0.8, 0.9, 0.5]; // Example: Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5
+		const weights = [0.3, 0.2, 0.8, 0.9, 0.5, 1.0]; // Example: Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5, Guilherme=1.0
 		const filteredPessoas = pessoas.filter((p) => p !== selected);
 		const filteredWeights = pessoas
 			.map((p, i) => ({ p, w: weights[i] }))
@@ -70,7 +70,10 @@
 <div class="relative flex h-full min-h-[400px] w-full items-center justify-center">
 	<Confetti active={showConfetti} />
 
-	<div class="coffee-sorter-card w-2/4 rounded-lg p-8 text-center shadow-lg dark:shadow-gray-800" in:fade={{ duration: 400 }}>
+	<div
+		class="coffee-sorter-card w-2/4 rounded-lg p-8 text-center shadow-lg dark:shadow-gray-800"
+		in:fade={{ duration: 400 }}
+	>
 		<h2 class="mt-0 mb-4 text-2xl font-bold">Sorteio do Café</h2>
 
 		{#if selected || spinning}
@@ -78,7 +81,7 @@
 				<div>
 					<p class="my-4 text-lg">Parabéns, você foi sorteado para fazer café:</p>
 				</div>
-				<div class="w-full mb-4">
+				<div class="mb-4 w-full">
 					<div class="cube-container">
 						<div
 							class="cube"
@@ -96,7 +99,7 @@
 												? 'top'
 												: 'bottom'}"
 								>
-									<p class="text-lg font-bold winner-text">
+									<p class="winner-text text-lg font-bold">
 										✨ {name} ✨
 									</p>
 								</div>
