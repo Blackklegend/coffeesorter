@@ -19,9 +19,22 @@
 	const particles: Particle[] = [];
 
 	const possibleColors = [
-		'#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3',
-		'#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39',
-		'#FFEB3B', '#FFC107', '#FF9800', '#FF5722'
+		'#f44336',
+		'#e91e63',
+		'#9c27b0',
+		'#673ab7',
+		'#3f51b5',
+		'#2196f3',
+		'#03a9f4',
+		'#00bcd4',
+		'#009688',
+		'#4CAF50',
+		'#8BC34A',
+		'#CDDC39',
+		'#FFEB3B',
+		'#FFC107',
+		'#FF9800',
+		'#FF5722'
 	];
 	const PARTICLE_COUNT = 150;
 
@@ -84,7 +97,7 @@
 		if (confettiAnimationId) {
 			cancelAnimationFrame(confettiAnimationId);
 			confettiAnimationId = undefined;
-            confettiContext!.clearRect(0, 0, canvas.width, canvas.height);
+			confettiContext!.clearRect(0, 0, canvas.width, canvas.height);
 		}
 		particles.length = 0;
 	}
@@ -94,4 +107,4 @@
 	});
 </script>
 
-<canvas bind:this={canvas} class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
+<canvas bind:this={canvas} class="pointer-events-none absolute inset-0 z-10 h-full w-full"></canvas>
