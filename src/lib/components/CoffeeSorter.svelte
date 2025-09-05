@@ -21,7 +21,7 @@
 	let selected: string | undefined;
 	export let showConfetti = false;
 	let spinning = false;
-	let spinInterval: number;
+	let spinInterval: ReturnType<typeof setInterval>;
 
 	function startSpinning() {
 		spinning = true;
@@ -35,26 +35,42 @@
 	function sortearPessoa() {
 		showConfetti = false;
 		// Define weights for each person (must match pessoas order)
-		const weights = [0.3, 0.2, 0.8, 0.9, 0.5, 1.0]; // Example: Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5, Guilherme=1.0
-		const filteredPessoas = pessoas.filter((p) => p !== selected);
-		const filteredWeights = pessoas
-			.map((p, i) => ({ p, w: weights[i] }))
-			.filter(({ p }) => p !== selected)
-			.map(({ w }) => w);
+		// Higher weights = higher chance of being selected
+		const weights = [0.3, 0.2, 0.8, 0.9, 0.5, 1.0]; // Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5, Guilherme=1.0
+		
+		// Filter out the currently selected person and their corresponding weight
+		const availablePeople = pessoas
+			.map((person, index) => ({ person, weight: weights[index] }))
+			.filter(({ person }) => person !== selected);
 
-		// Weighted random choice
-		function weightedChoice(arr: string[], weights: number[]) {
-			const total = weights.reduce((a, b) => a + b, 0);
-			let r = random.float(0, total);
-			for (let i = 0; i < arr.length; i++) {
-				if (r < weights[i]) return arr[i];
-				r -= weights[i];
-			}
-			return arr[arr.length - 1];
+		// Generate exponential random number for a given rate parameter
+		// This simulates the exponential distribution used in the SO solution
+		function exponentialRandom(rate: number): number {
+			// Use the inverse transform method: -ln(1-U)/rate where U is uniform(0,1)
+			// Since random.float(0,1) gives us U, we can use -ln(random.float(0,1))/rate
+			// But we use (1 - random.float(0,1)) to avoid ln(0)
+			return -Math.log(1 - random.float(0, 1)) / rate;
 		}
 
-		const newPerson = weightedChoice(filteredPessoas, filteredWeights);
-		const targetIndex = pessoas.indexOf(newPerson!);
+		// Weighted selection using exponential distribution method
+		// This ensures proper proportional probabilities as described in the SO post
+		function weightedChoice(peopleWithWeights: Array<{ person: string; weight: number }>) {
+			// Decorate: pair each person with their exponential random value
+			const decorated = peopleWithWeights.map(({ person, weight }) => ({
+				person,
+				randomValue: exponentialRandom(weight)
+			}));
+			
+			// Sort by the exponential random values (ascending)
+			decorated.sort((a, b) => a.randomValue - b.randomValue);
+			
+			// Return the person with the smallest exponential random value
+			// (highest probability of being selected first)
+			return decorated[0].person;
+		}
+
+		const newPerson = weightedChoice(availablePeople);
+		const targetIndex = pessoas.indexOf(newPerson);
 		currentSpinIndex = pessoas.length - targetIndex;
 		startSpinning();
 
