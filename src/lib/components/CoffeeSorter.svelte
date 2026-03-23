@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Monte', 'Igor', 'Leo', 'Tinho', 'Guilherme', 'Bansen'];
+	const pessoas = ['Monte', 'Igor', 'Leo', 'Tinho', 'Guilherme', 'Bansen', 'Gustavo'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
@@ -35,7 +35,7 @@
 	function sortearPessoa() {
 		showConfetti = false;
 		// Define weights for each person (must match pessoas order)
-		const weights = [0.3, 0.2, 0.8, 0.9, 0.5, 1.0]; // Example: Tinho=0.3, Bansen=0.2, Igor=0.8, Leo=0.9, Monte=0.5, Guilherme=1.0
+		const weights = [0.3, 0.2, 0.8, 0.9, 0.5, 1.0, 1.0]; // Monte=0.3, Igor=0.2, Leo=0.8, Tinho=0.9, Guilherme=0.5, Bansen=1.0, Gustavo=1.0
 		const filteredPessoas = pessoas.filter((p) => p !== selected);
 		const filteredWeights = pessoas
 			.map((p, i) => ({ p, w: weights[i] }))
@@ -94,10 +94,10 @@
 									class="cube-face {i === 0
 										? 'front'
 										: i === 1
-											? 'back'
-											: i === 2
-												? 'top'
-												: 'bottom'}"
+										? 'back'
+										: i === 2
+										? 'top'
+										: 'bottom'}"
 								>
 									<p class="winner-text text-lg font-bold">
 										✨ {name} ✨
@@ -105,40 +105,40 @@
 								</div>
 							{/each}
 						</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		{:else}
-			<p in:fade={{ duration: 400 }} class="text-lg">
-				Clique no botão para sortear quem vai fazer o café
-			</p>
-		{/if}
+			{:else}
+				<p in:fade={{ duration: 400 }} class="text-lg">
+					Clique no botão para sortear quem vai fazer o café
+				</p>
+			{/if}
 
-		{#if !spinning}
-			<div class="mt-4 flex justify-center gap-2">
-				<button
-					class="primary-button cursor-pointer rounded-2xl px-3 py-2 font-bold disabled:opacity-50"
-					on:click={sortearPessoa}
-					disabled={spinning}
-				>
-					{selected ? 'Novo Sorteio' : 'Sortear'}
-				</button>
-
-				{#if selected}
+			{#if !spinning}
+				<div class="mt-4 flex justify-center gap-2">
 					<button
-						class="secondary-button cursor-pointer rounded-2xl px-3 py-2 font-bold"
-						on:click={() => {
-							selected = undefined;
-							showConfetti = false;
-						}}
+						class="primary-button cursor-pointer rounded-2xl px-3 py-2 font-bold disabled:opacity-50"
+						on:click={sortearPessoa}
+						disabled={spinning}
 					>
-						Limpar
+						{selected ? 'Novo Sorteio' : 'Sortear'}
 					</button>
-				{/if}
-			</div>
-		{/if}
+
+					{#if selected}
+						<button
+							class="secondary-button cursor-pointer rounded-2xl px-3 py-2 font-bold"
+							on:click={() => {
+								selected = undefined;
+								showConfetti = false;
+							}}
+						>
+							Limpar
+						</button>
+					{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
-</div>
 
 <style>
 	.primary-button {
