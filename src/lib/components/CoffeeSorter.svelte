@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Igor', 'Leo', 'Guilherme', 'Bansen', 'Gustavo'];
+	const pessoas = ['Monte', 'Igor', 'Leo', 'Guilherme', 'Bansen', 'Gustavo'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
@@ -35,7 +35,7 @@
 	function sortearPessoa() {
 		showConfetti = false;
 		// Define weights for each person (must match pessoas order)
-		const weights = [0.2, 0.8, 0.5, 1.0, 1.0]; // Igor=0.2, Leo=0.8, Guilherme=0.5, Bansen=1.0, Gustavo=1.0
+		const weights = [0.3, 0.2, 0.8, 0.5, 1.0, 1.0]; // Monte=0.3, Igor=0.2, Leo=0.8, Guilherme=0.5, Bansen=1.0, Gustavo=1.0
 		const filteredPessoas = pessoas.filter((p) => p !== selected);
 		const filteredWeights = pessoas
 			.map((p, i) => ({ p, w: weights[i] }))
