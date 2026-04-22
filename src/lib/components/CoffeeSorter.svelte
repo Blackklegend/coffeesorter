@@ -1,10 +1,9 @@
 <script lang="ts">
-	import random from 'random';
-	import Confetti from './Confetti.svelte';
+		import Confetti from './Confetti.svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 
-	const pessoas = ['Monte', 'Igor', 'Leo', 'Guilherme', 'Bansen', 'Gustavo'];
+	const pessoas = ['Igor', 'Monte', 'Bansen', 'Guilherme', 'Gustavo', 'Leo'];
 	const SPIN_DURATION = 1500;
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
@@ -32,26 +31,27 @@
 		}, SPIN_INTERVAL);
 	}
 
+	function weightedChoice(arr: string[], weights: number[]) {
+		const total = weights.reduce((a, b) => a + b, 0);
+		let r = Math.random() * total;
+		console.log('Random value:', r, 'Total weight:', total);
+		for (let i = 0; i < arr.length; i++) {
+			r -= weights[i];
+			if (r <= 0) return arr[i];
+		}
+		return arr[arr.length - 1];
+	}
+
 	function sortearPessoa() {
 		showConfetti = false;
-		// Define weights for each person (must match pessoas order)
-		const weights = [0.3, 0.2, 0.8, 0.5, 1.0, 1.0]; // Monte=0.3, Igor=0.2, Leo=0.8, Guilherme=0.5, Bansen=1.0, Gustavo=1.0
+		// Weights for each person (must match pessoas order)
+		const weights = [1.0, 0.8, 0.8, 1.2, 1.2, 0.6]; // ['Igor', 'Monte', 'Bansen', 'Guilherme', 'Gustavo', 'Leo']
+
 		const filteredPessoas = pessoas.filter((p) => p !== selected);
 		const filteredWeights = pessoas
 			.map((p, i) => ({ p, w: weights[i] }))
 			.filter(({ p }) => p !== selected)
 			.map(({ w }) => w);
-
-		// Weighted random choice
-		function weightedChoice(arr: string[], weights: number[]) {
-			const total = weights.reduce((a, b) => a + b, 0);
-			let r = random.float(0, total);
-			for (let i = 0; i < arr.length; i++) {
-				if (r < weights[i]) return arr[i];
-				r -= weights[i];
-			}
-			return arr[arr.length - 1];
-		}
 
 		const newPerson = weightedChoice(filteredPessoas, filteredWeights);
 		const targetIndex = pessoas.indexOf(newPerson!);
