@@ -8,8 +8,8 @@
 	const SPIN_INTERVAL = 50; // Faster updates for smoother animation
 	const ROTATIONS = 12; // Number of full rotations before stopping
 
-	$: currentSpinIndex = 0;
-	$: rotationState = 0;
+	let currentSpinIndex = 0;
+	let rotationState = 0;
 	$: spinningNames = [
 		pessoas[currentSpinIndex % pessoas.length],
 		pessoas[(currentSpinIndex + 1) % pessoas.length],
@@ -89,7 +89,7 @@
 							class:flipped={showConfetti}
 							style="--rotation-state: {rotationState}"
 						>
-							{#each spinningNames as name, i}
+							{#each spinningNames as name, i (name)}
 								<div
 									class="cube-face {i === 0
 										? 'front'
